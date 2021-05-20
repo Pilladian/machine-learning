@@ -8,7 +8,24 @@ from PIL import Image
 import torch
 
 
-class DataSet(Dataset):
+# create csv file for dataset
+def create_csv_example(root):
+    data = pandas.DataFrame(columns=["img_file_name", "gender"])
+    data["img_file_name"] = os.listdir(root)
+
+    for ind, filename in enumerate(os.listdir(root)):
+        if "female" in filename:
+            data["gender"][ind] = 0
+        elif "male" in filename:
+            data["gender"][ind] = 1
+        else:
+            data["gender"][ind] = 2
+
+    data.to_csv("data.csv", index=False, header=True)
+
+
+# Example: Images
+class ImageDataset(Dataset):
 
     def __init__(self, root, train=False, eval=False, test=False, transform=None):
         self.root = root
